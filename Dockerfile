@@ -8,7 +8,6 @@ ENV JAVA_ALPINE_VERSION 8.111.14-r0
 ENV GRADLE_VERSION 3.5
 ENV GRADLE_HOME /usr/local/gradle
 ENV PATH ${PATH}:${GRADLE_HOME}/bin
-ENV GRADLE_USER_HOME /gradle
 
 ENV DOCKER_HOST tcp://0.0.0.0:2375
 
@@ -62,6 +61,8 @@ RUN curl -LO "https://services.gradle.org/distributions/gradle-$GRADLE_VERSION-b
     unzip gradle-$GRADLE_VERSION-bin.zip && \
     rm -f gradle-$GRADLE_VERSION-bin.zip && \
     ln -s gradle-$GRADLE_VERSION gradle
+# Necessary to avoid error "Failed to load native library 'libnative-platform.so' for Linux amd64."
+RUN apk update && apk add libstdc++ && rm -rf /var/cache/apk/*
 
 ENV HOME $JENKINS_HOME
 
